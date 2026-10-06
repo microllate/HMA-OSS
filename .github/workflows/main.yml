@@ -2,7 +2,7 @@ name: Main
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, build-test ]
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/workflows/issue.yml'
@@ -70,6 +70,13 @@ jobs:
         run: |
           ./gradlew :app:assemble
 
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          name: hma-oss-test-apk
+          path: "app/build/outputs/apk/debug/*.apk"
+
       - name: Upload APK mappings
         uses: actions/upload-artifact@v7
         with:
@@ -107,6 +114,7 @@ jobs:
           path: ${{ steps.buildModule.outputs.debugFile }}
 
       - name: Upload to GitHub release
+        if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
