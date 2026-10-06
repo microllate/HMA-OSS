@@ -53,6 +53,9 @@ jobs:
           echo crowdinApiKey='${{ secrets.CROWDIN_LIST_MEMBERS_API_TOKEN }}' >> local.properties
           echo "${{ secrets.KEY_STORE }}" | base64 --decode > key.jks
 
+      - name: Prepare local properties
+        run: touch local.properties
+
       - name: Cache gradle
         uses: actions/cache@v6
         with:
